@@ -1,0 +1,113 @@
+* {
+  box-sizing: border-box;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg, #93c5fd, #a5f3fc, #d1fae5);
+  background-size: 300% 300%;
+  animation: gradientShift 15s ease infinite;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.auth-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  left: -30%;
+  width: 160%;
+  height: 160%;
+  background: radial-gradient(circle at center, #ffffff50 10%, transparent 40%);
+  filter: blur(100px);
+  z-index: 0;
+  animation: spinBlur 30s linear infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes spinBlur {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.auth-box {
+  position: relative;
+  z-index: 1;
+  background: #ffffff;
+  padding: 32px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-box h2 {
+  text-align: center;
+  color: #1e40af;
+  margin-bottom: 20px;
+}
+
+.auth-box input,
+.auth-box select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+}
+
+.auth-box button {
+  background-color: #3b82f6;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.auth-box button:hover {
+  background-color: #2563eb;
+}
+
+.auth-box p {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+.auth-box a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.name-row {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.name-row input {
+  width: 100%;
+}
