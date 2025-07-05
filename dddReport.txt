@@ -1,0 +1,125 @@
+\documentclass[12pt,a4paper]{report}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+
+\begin{document}
+
+% Title Page
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    
+    {\Huge \bfseries Dopamine Driving through Dashboard (DDD) \par}
+    \vspace{1.5cm}
+    
+    {\Large Submitted by \par}
+    \vspace{0.5cm}
+    {\Large \bfseries Gaurpad Shukla, Anshika Shukla, Yogesh Tharvani, Jhalak \par}
+    \vspace{0.2cm}
+    {\large Internship at Dhananjaya Lab for Education Design (DLED), IIT Ropar \par}
+    \vfill
+    
+    {\large Under the guidance of \par}
+    \vspace{0.5cm}
+    {\large \bfseries Dr. Sakshi Sharma \par}
+    \vspace{2cm}
+    
+    {\large Department of Computer Science \par}
+    {\large Indian Institute of Technology Ropar \par}
+    {\large Punjab, India \par}
+    \vspace{1.5cm}
+    
+    {\large July, 2025 \par}
+\end{titlepage}
+
+% Declaration
+\chapter*{Declaration}
+We hereby declare that the project work entitled “\textbf{Dopamine Driving through Dashboard}” is carried out by us during our internship at \textbf{DLED, IIT Ropar} under the supervision of \textbf{Dr. Sakshi Sharma}, and the same has not been submitted elsewhere for the award of any degree.
+
+\vspace{2cm}
+
+\begin{flushright}
+\textbf{(Gaurpad Shukla)}\\
+\textbf{(Anshika Shukla)}\\
+\textbf{(Yogesh Tharvani)}\\
+\textbf{(Jhalak)}
+\end{flushright}
+
+% Certificate
+\chapter*{Certificate}
+This is to certify that the project work entitled “\textbf{Dopamine Driving through Dashboard}” is carried out by \textbf{ Gaurpad Shukla, Anshika Shukla, Yogesh Tharvani, and Jhalak} during their internship at \textbf{DLED, IIT Ropar} under my guidance and supervision in partial fulfillment of the internship requirements.
+
+\vspace{2cm}
+
+\begin{flushright}
+\textbf{(Dr. Sakshi Sharma)}\\
+Faculty Supervisor\\
+Dhananjaya Lab for Education Design (DLED)\\
+Indian Institute of Technology Ropar
+\end{flushright}
+
+% Acknowledgment
+\chapter*{Acknowledgment}
+We sincerely thank our project supervisor, Dr. Sakshi Sharma, for her continuous guidance, encouragement, and valuable feedback throughout the internship. We extend our gratitude to the Dhananjaya Lab for Education Design (DLED) at IIT Ropar for giving us the opportunity to work on this innovative and impactful project. This project would not have been possible without the collaborative efforts of our team.
+
+% Abstract
+\chapter*{Abstract}
+\textbf{Dopamine Driving through Dashboard} (DDD) is a unified visualisation platform designed to enhance the learning experience through intuitive, immersive, and interactive dashboards. This project is part of the Peer Evaluation System (PES) initiative at DLED, IIT Ropar. The dashboards aim to offer dopamine-rich feedback loops, driving learner motivation and engagement. Initially built using Google Sheets and App Scripts (version-0), this iteration transitions the platform to a robust MERN stack foundation with fully responsive, modular components and analytics features.
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\chapter{Introduction}
+We’re excited to embark on this amazing project, where we aim to leverage dashboard-style interfaces to make learning more engaging, enjoyable, and enriching. By using intuitive, interactive dashboards, we can transform the learning experience, making it more immersive and motivating for learners.
+
+\chapter{Literature Review}
+Previous educational platforms lacked structured peer evaluation and actionable visual feedback. Our system bridges this gap by combining backend data handling with front-end insights and modern UX practices.
+
+\chapter{Methodology}
+\section{System Architecture}
+The system adopts a modular MERN stack architecture using React components on the frontend, Express APIs for logic, MongoDB for persistent storage, and Node.js for backend orchestration. React Router enables SPA behavior, and JWT secures authentication.
+
+\section{Version History}
+\begin{itemize}
+    \item \textbf{Version-0:} Implemented with Google Sheets and Google Apps Script.
+    \item \textbf{Version-1 (Current):} Migrated to full-stack React-based implementation.
+\end{itemize}
+
+\section{Tools and Technologies}
+\begin{itemize}
+    \item \textbf{MongoDB} – NoSQL database for storing user and evaluation data.
+    \item \textbf{Express.js} – Backend API framework built on Node.js.
+    \item \textbf{React.js} – Frontend library for building dynamic dashboard components.
+    \item \textbf{Node.js} – JavaScript runtime environment for backend execution.
+    \item \textbf{TypeScript} – Type-safe extension to JavaScript for robust development.
+\end{itemize}
+
+\chapter{Results and Discussion}
+The project includes a fully functional login/signup system, role-based dashboards (Student/Teacher/Admin), peer assignment submission and evaluation modules, analytics visualizations using Recharts, and responsive UI with CSS. We maintained accessibility and performance while supporting light/dark modes and component reusability.
+
+\chapter{Conclusion and Future Work}
+This project demonstrates a scalable and impactful application of full-stack technologies in education. Future enhancements include adding real-time notifications, downloadable reports, Google OAuth login, and further personalization of the user experience.
+
+\begin{thebibliography}{9}
+\bibitem{mern} 
+Brad Traversy. 
+\textit{MERN Stack Front To Back}. 
+Traversy Media, 2021.
+
+\bibitem{peerreview}
+IEEE. 
+\textit{Peer Review Frameworks in Online Learning}. 
+IEEE Journals, 2023.
+\end{thebibliography}
+
+\appendix
+\chapter{Appendix}
+\section{Screenshots}
+% Use \includegraphics[width=\textwidth]{screenshot.png} for visuals
+
+\end{document}
