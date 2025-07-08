@@ -1,63 +1,114 @@
-import { BarChart3, Clock, Flame, ListChecks, MessageCircle, X } from "lucide-react";
+import {
+  BarChart3,
+  Clock,
+  Flame,
+  ListChecks,
+  MessageCircle,
+  X,
+} from "lucide-react";
+import { useState } from "react";
 import DashboardCard from "../components/Dashboard/DashboardCard";
 import ProgressChart from "../components/Charts/ProgressChart";
 import ACChart from "../components/Charts/XPChart";
-import PerformanceMeter from "../components/Charts/PerformanceMeter";
+import EvaluationMeter from "../components/Charts/PerformanceMeter";
 import MiniGames from "../components/Gamification/MiniGames";
 import Courses from "../components/Dashboard/Courses";
 import Leaderboard from "../components/Leaderboard/Leaderboard";
 import Streak from "../components/Dashboard/Streak";
 import Badges from "../components/Dashboard/Badges";
 import EducationalChatbot from "./DDD-chatbot";
-import "./styles.css";
-import { useEffect, useState } from "react";
+import PeerComparisonRadar from "../components/Charts/PeerComparisonRadar";
+import { getDashboardMetricsById } from "../data/SampleUserData";
+import { useTheme } from "../context/ThemeContext"; // 🔑 global theme hook
+import { useAuth } from "../context/Authcontext"; // ✅ Auth context
 
-const metrics = [
-  {
-    icon: <Clock size={24} />,
-    title: "Watch Time",
-    value: "12h 30m",
-    subtitle: "Weekly Total",
-    change: "+5.4%",
-  },
-  {
-    icon: <ListChecks size={24} />,
-    title: "Videos Completed",
-    value: "36",
-    subtitle: "In This Week",
-    change: "+8.2%",
-  },
-  {
-    icon: <BarChart3 size={24} />,
-    title: "Evaluation Completed",
-    value: "59%",
-    subtitle: "Average",
-    change: "+1.5%",
-  },
-  {
-    icon: <Flame size={24} />,
-    title: "Current Streak",
-    value: "7 Days",
-    subtitle: "Daily Activity",
-    change: "🔥",
-  },
-];
+import "./styles.css";
 
 const DashboardOverview = () => {
-  const [theme, setTheme] = useState("light");
+  const { theme, toggleTheme } = useTheme(); // 👈 using global context
+  const { user } = useAuth(); // 🔑 Get current user from auth context
   const [isChatOpen, setIsChatOpen] = useState(false);
 
-  useEffect(() => {
-    document.body.className = theme;
-  }, [theme]);
+  // Dynamically get user metrics based on logged-in user
+  const userMetrics = user ? getDashboardMetricsById(user.id) : null;
 
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
-  };
+  // Create metrics array based on user data
+  const metrics = userMetrics
+    ? [
+        {
+          icon: <Clock size={24} />,
+          title: "Work Time",
+          value: userMetrics.workTime,
+          subtitle: "Weekly Total",
+          change: "+5.4%",
+        },
+        {
+          icon: <ListChecks size={24} />,
+          title: "Evaluation pending",
+          value: ${userMetrics.evaluationsPending},
+          subtitle: "In This Week",
+          change: "+8.2%",
+        },
+        {
+          icon: <BarChart3 size={24} />,
+          title: "Evaluation Completed",
+          value: userMetrics.evaluationsCompleted,
+          subtitle: "Average",
+          change: "+1.5%",
+        },
+        {
+          icon: <Flame size={24} />,
+          title: "Current Streak",
+          value: userMetrics.streak,
+          subtitle: "Daily Activity",
+          change: "🔥",
+        },
+      ]
+    : [];
 
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);
   };
+
+  // Show loading or error state if user is not available
+  if (!user) {
+    return (
+      <div className="dashboard-new">
+        <div className="dashboard-header">
+          <h1 className="dashboard-heading">
+            PES Dashboard
+            <b>
+              <div className="label">Please log in to view your dashboard</div>
+            </b>
+          </h1>
+        </div>
+      </div>
+    );
+  }
+
+  // Show message if user metrics are not found
+  if (!userMetrics) {
+    return (
+      <div className="dashboard-new">
+        <div className="dashboard-header">
+          <h1 className="dashboard-heading">
+            PES Dashboard
+            <b>
+              <div className="label">Welcome, {user.name || user.email}!</div>
+            </b>
+          </h1>
+          <button className="theme-toggle-button" onClick={toggleTheme}>
+            {theme === "light" ? "🌙 Dark Mode" : "☀ Light Mode"}
+          </button>
+        </div>
+        <div className="dashboard-card">
+          <div className="card-content">
+            <p>No dashboard data available for this user.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard-new">
@@ -65,15 +116,14 @@ const DashboardOverview = () => {
         <h1 className="dashboard-heading">
           PES Dashboard
           <b>
-            <div className="label">Welcome to your Dashboard!</div>
+            <div className="label">Welcome back, {user.name || user.email}!</div>
           </b>
         </h1>
         <button className="theme-toggle-button" onClick={toggleTheme}>
-          {theme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode"}
+          {theme === "light" ? "🌙 Dark Mode" : "☀ Light Mode"}
         </button>
       </div>
 
-      {/* Top Metrics */}
       <div className="metrics-row">
         {metrics.map((m) => (
           <DashboardCard
@@ -87,11 +137,10 @@ const DashboardOverview = () => {
         ))}
       </div>
 
-      {/* Charts Section */}
       <div className="vertical-charts">
         <div className="dashboard-card">
           <div className="card-content">
-            <ProgressChart />
+            <ProgressChart userId={user.id} />
             <div className="label">Weekly Progress</div>
             <div className="sublabel">Your learning growth</div>
           </div>
@@ -107,44 +156,48 @@ const DashboardOverview = () => {
 
         <div className="dashboard-card">
           <div className="card-content">
-            <PerformanceMeter />
+            <EvaluationMeter userId={user.id} />
             <div className="label">Today's Meter</div>
             <div className="sublabel">Activity Summary</div>
           </div>
         </div>
       </div>
 
-      {/* Mini Games */}
+      <div className="dashboard-card">
+        <div className="card-content">
+          <PeerComparisonRadar userId={user.id} />
+        </div>
+      </div>
+
       <div className="dashboard-card minigames-card">
         <div className="card-content">
           <h3 className="label">Mini Games</h3>
           <MiniGames />
         </div>
       </div>
+
       <div className="dashboard-card minigames-card">
         <div className="card-content">
-          <Courses/>
-          <h3 className="label">Courses </h3>
+          <Courses />
+          <h3 className="label">Courses</h3>
         </div>
       </div>
 
-      {/* Streak & Badges Section */}
       <div className="streaks-badges-section">
         <div className="dashboard-card">
           <div className="card-content">
-            <Streak />
+            <Streak userId={user.id} />
             <h3 className="label">Your Streak</h3>
           </div>
         </div>
         <div className="dashboard-card">
           <div className="card-content-badges">
-            <Badges />
-             <h3 className="label">Achievement Badges</h3>
+            <Badges userId={user.id} />
+            <h3 className="label">Achievement Badges</h3>
           </div>
         </div>
       </div>
 
-      {/* Leaderboard */}
       <div className="dashboard-card leaderboard-card">
         <div className="card-content">
           <Leaderboard />
@@ -152,76 +205,145 @@ const DashboardOverview = () => {
         </div>
       </div>
 
-      {/* Floating Chat Icon */}
-      <div 
+      {/* Chatbot Floating Button */}
+      <div
         onClick={toggleChat}
         style={{
-          position: 'fixed',
-          bottom: '20px',
-          right: '20px',
-          width: '60px',
-          height: '60px',
-          backgroundColor: '#4f46e5',
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+          position: "fixed",
+          bottom: "24px",
+          right: "24px",
+          width: "64px",
+          height: "64px",
+          background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+          borderRadius: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          boxShadow: "0 8px 32px rgba(79, 70, 229, 0.4)",
           zIndex: 1000,
-          transition: 'transform 0.2s ease'
+          transition: "all 0.3s ease",
+          animation: "pulse 2s infinite",
         }}
-        onMouseEnter={(e) => (e.currentTarget as HTMLElement).style.transform = 'scale(1.1)'}
-        onMouseLeave={(e) => (e.currentTarget as HTMLElement).style.transform = 'scale(1)'}
+        onMouseEnter={(e) => {
+          const el = e.currentTarget as HTMLElement;
+          el.style.transform = "scale(1.1)";
+          el.style.boxShadow = "0 12px 40px rgba(79, 70, 229, 0.6)";
+        }}
+        onMouseLeave={(e) => {
+          const el = e.currentTarget as HTMLElement;
+          el.style.transform = "scale(1)";
+          el.style.boxShadow = "0 8px 32px rgba(79, 70, 229, 0.4)";
+        }}
       >
-        <MessageCircle color="white" size={24} />
+        <MessageCircle color="white" size={28} />
+        <div
+          style={{
+            position: "absolute",
+            top: "8px",
+            right: "8px",
+            width: "12px",
+            height: "12px",
+            backgroundColor: "#10b981",
+            borderRadius: "50%",
+            border: "2px solid white",
+            animation: "pulse 1.5s infinite",
+          }}
+        />
       </div>
 
-      {/* Floating Chat Window */}
+      {/* Chatbot Panel */}
       {isChatOpen && (
-        <div style={{
-          position: 'fixed',
-          bottom: '90px',
-          right: '20px',
-          width: '400px',
-          height: '500px',
-          backgroundColor: 'white',
-          borderRadius: '12px',
-          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
-          zIndex: 1001,
-          overflow: 'hidden',
-          border: '1px solid #e5e7eb'
-        }}>
-          {/* Chat Header */}
-          <div style={{
-            background: '#4f46e5',
-            color: 'white',
-            padding: '12px 16px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-          }}>
-            <span style={{ fontWeight: '600' }}>DDD Assistant</span>
-            <button 
+        <div
+          style={{
+            position: "fixed",
+            bottom: "100px",
+            right: "24px",
+            width: "420px",
+            height: "580px",
+            backgroundColor: "white",
+            borderRadius: "20px",
+            boxShadow: "0 20px 60px rgba(0, 0, 0, 0.2)",
+            zIndex: 1001,
+            overflow: "hidden",
+            border: "1px solid #e5e7eb",
+            animation: "slideUp 0.3s ease-out",
+          }}
+        >
+          <div
+            style={{
+              background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+              color: "white",
+              padding: "16px 20px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              borderRadius: "20px 20px 0 0",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <div
+                style={{
+                  width: "32px",
+                  height: "32px",
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                  borderRadius: "8px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <MessageCircle size={18} />
+              </div>
+              <div>
+                <span style={{ fontWeight: 700, fontSize: "16px" }}>
+                  DDD Assistant
+                </span>
+                <div style={{ fontSize: "12px", opacity: 0.9 }}>
+                  Making learning engaging ✨
+                </div>
+              </div>
+            </div>
+            <button
               onClick={toggleChat}
               style={{
-                background: 'none',
-                border: 'none',
-                color: 'white',
-                cursor: 'pointer',
-                padding: '4px'
+                background: "rgba(255,255,255,0.2)",
+                border: "none",
+                color: "white",
+                cursor: "pointer",
+                padding: "8px",
+                borderRadius: "8px",
+                transition: "all 0.2s ease",
               }}
+              onMouseEnter={(e) =>
+                ((e.currentTarget as HTMLElement).style.background =
+                  "rgba(255,255,255,0.3)")
+              }
+              onMouseLeave={(e) =>
+                ((e.currentTarget as HTMLElement).style.background =
+                  "rgba(255,255,255,0.2)")
+              }
             >
-              <X size={20} />
+              <X size={18} />
             </button>
           </div>
-          
-          {/* Chat Content */}
-          <div style={{ height: 'calc(100% - 56px)' }}>
+
+          <div style={{ height: "calc(100% - 72px)" }}>
             <EducationalChatbot />
           </div>
         </div>
       )}
+
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.8; }
+        }
+        @keyframes slideUp {
+          from { transform: translateY(20px) scale(0.95); opacity: 0; }
+          to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+      `}</style>
     </div>
   );
 };
